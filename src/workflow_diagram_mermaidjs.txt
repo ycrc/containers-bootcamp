@@ -1,0 +1,23 @@
+%% https://mermaidjs.github.io/mermaid-live-editor
+graph LR
+subgraph Build Environment
+A1{Docker} --> B1[does image already exist?]
+B1 -- no --> C1[build with Dockerfile]
+B1 -- yes --> D1(pull & run image)
+C1 --> E1[push to dockerhub]
+E1 --> D1
+end
+subgraph Production Cloud/Everywhere else
+A3{Docker} --> B3[does image already exist?]
+B3 -- yes --> D3(pull & run image)
+B3 -- no --> C1
+end
+
+subgraph Production HPC
+A2{Singularity} --> B2[does image already exist?]
+B2 -- yes --> D2(pull & run image)
+B2 -- no --> C1
+end
+
+
+%% theme: neutral

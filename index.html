@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ben Evans">
+  <title>HPC Containers with Singularity</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://revealjs.com/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <link rel="stylesheet" href="https://revealjs.com/css/theme/white.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'https://revealjs.com/css/print/pdf.css' : 'https://revealjs.com/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="https://revealjs.com/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+  <h1 class="title">HPC Containers with Singularity</h1>
+  <p class="author">Ben Evans</p>
+  <p class="date">December 4, 2018</p>
+</section>
+
+<section id="outline-for-today" class="slide level1">
+<h1>Outline for Today</h1>
+<ul>
+<li>Containers Background</li>
+<li>Docker &amp; Singularity</li>
+<li>Running Singularity</li>
+<li>Development Workflow
+<ul>
+<li>Using Docker to build</li>
+</ul></li>
+</ul>
+</section>
+<section id="containers" class="slide level1">
+<h1>Containers</h1>
+<section>
+</section>
+<section id="section" class="slide level1">
+<h1></h1>
+<h3 id="definitions">Definitions</h3>
+<ul>
+<li><p><em><strong>Container Image</strong></em>: A self-contained, read-only file(s) used to run application(s)</p></li>
+<li><p><em><strong>Container</strong></em>: A running instance of an image</p></li>
+</ul>
+</section>
+<section id="section-1" class="slide level1">
+<h1></h1>
+<h3 id="three-methods-of-control">Three methods of control</h3>
+<ul>
+<li>Process isolation
+<ul>
+<li>Linux <a href="https://en.wikipedia.org/wiki/Linux_namespaces">Namespaces</a> (chrome uses for <a href="https://chromium.googlesource.com/chromium/src/+/HEAD/docs/linux_sandboxing.md">sandboxes</a>)</li>
+</ul></li>
+<li>Resource Limits
+<ul>
+<li>Linux <a href="https://en.wikipedia.org/wiki/Cgroups">cgroups</a></li>
+</ul></li>
+<li>Security
+<ul>
+<li>When user is trusted: <a href="https://en.wikipedia.org/wiki/Security-Enhanced_Linux">SELinx</a>, <a href="https://en.wikipedia.org/wiki/AppArmor">AppArmor</a></li>
+<li>When user is untrusted: run container as user</li>
+</ul></li>
+</ul>
+</section>
+<section id="section-2" class="slide level1">
+<h1></h1>
+<table>
+<thead>
+<tr class="header">
+<th>Pro</th>
+<th>Con</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Light-weight</td>
+<td>Linux best supported</td>
+</tr>
+<tr class="even">
+<td>Fast start time</td>
+<td>Another layer of abstraction</td>
+</tr>
+<tr class="odd">
+<td>Batteries included</td>
+<td>Additional development complexity</td>
+</tr>
+<tr class="even">
+<td>Shareable</td>
+<td>Licensed software can be tricky</td>
+</tr>
+<tr class="odd">
+<td>Reproducible</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="example" class="slide level1">
+<h1>Example</h1>
+<p>GPU-enabled IPython w/TensorFlow on a GPU node:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">srun</span> --pty -p gpu -c 2 --gres gpu:1 --mem 24G \
+  singularity exec --nv \
+    docker://tensorflow/tensorflow:latest-gpu ipython</code></pre></div>
+</section>
+<section id="docker" class="slide level1">
+<h1>Docker</h1>
+<section>
+<figure>
+<img src="img/docker_logo.svg" />
+</figure>
+</section>
+<section id="section-3" class="slide level1">
+<h1></h1>
+<ul>
+<li>Most popular container application</li>
+<li>Publicly <a href="https://www.youtube.com/watch?v=wW9CAH9nSLs">announced</a> in 2013</li>
+<li>Designed to run services
+<ul>
+<li>Often used for web apps</li>
+</ul></li>
+<li>Primary registry hub.docker.com</li>
+</ul>
+</section>
+<section id="section-4" class="slide level1">
+<h1></h1>
+<ul>
+<li>Service runs to orchestrate</li>
+<li>Images are composed of separate files: layers</li>
+<li>Designed to be run with elevated privileges</li>
+</ul>
+</section>
+<section id="section-5" class="slide level1">
+<h1></h1>
+<img src="img/docker_layout.png" />
+</section>
+</section>
+<section id="singularity" class="slide level1">
+<h1>Singularity</h1>
+<section>
+<figure>
+<img src="img/singularity_logo.png" />
+</figure>
+</section>
+<section id="section-6" class="slide level1">
+<h1></h1>
+<ul>
+<li>Released in 2016, <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0177459">paper in 2017</a></li>
+<li>Designed to run compute jobs</li>
+<li>Sylabs re-written, OSS/support model
+<ul>
+<li>v2.6 and v3 different, not backwards-compatible</li>
+</ul></li>
+<li>Registries:
+<ul>
+<li>singularity-hub.org</li>
+<li>cloud.sylabs.io/library</li>
+</ul></li>
+</ul>
+</section>
+<section id="section-7" class="slide level1">
+<h1></h1>
+<ul>
+<li>No services needed to run</li>
+<li>Images are single files</li>
+<li>Designed to be run as unprivileged user</li>
+</ul>
+</section>
+</section>
+<section id="how-to-singularity" class="slide level1">
+<h1>How To Singularity</h1>
+<section>
+</section>
+<section id="section-8" class="slide level1">
+<h1></h1>
+<h3 id="build"><a href="https://www.sylabs.io/guides/2.6/user-guide/appendix.html#build-command"><code>build</code></a></h3>
+<p>Build a singularity image (on the clusters)</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">singularity</span> build my_container.simg \
+   docker://brevans/my_container:latest</code></pre></div>
+<ul>
+<li>Can only build from docker/shub on cluster</li>
+<li>Can also copy an image file from elsewhere</li>
+</ul>
+</section>
+<section id="section-9" class="slide level1">
+<h1></h1>
+<h3 id="run-the-container">Run the Container</h3>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">singularity</span> run image.simg
+
+<span class="ex">singularity</span> exec docker://org/image program --option=value
+
+<span class="ex">singularity</span> shell -s /bin/bash shub://user/image</code></pre></div>
+</section>
+<section id="section-10" class="slide level1">
+<h1></h1>
+<h3 id="run"><a href="https://www.sylabs.io/guides/2.6/user-guide/quick_start.html#running-a-container"><code>run</code></a></h3>
+<p>Execute the default behavior</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">singularity</span> run image.simg --arg=42</code></pre></div>
+<ul>
+<li>Default action specified by ENTRYPOINT</li>
+<li>Additional arguments are passed to default action</li>
+</ul>
+</section>
+<section id="section-11" class="slide level1">
+<h1></h1>
+<h3 id="exec"><a href="https://www.sylabs.io/guides/2.6/user-guide/appendix.html#exec-command"><code>exec</code></a></h3>
+<p>Run a command inside the container</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">singularity</span> exec docker://tensorflow/tensorflow:latest-gpu \
+    python /home/be59/my_script.py</code></pre></div>
+<ul>
+<li>Run first argument after container</li>
+<li>Must exist/be on the <code>PATH</code> inside container</li>
+</ul>
+</section>
+<section id="section-12" class="slide level1">
+<h1></h1>
+<h3 id="shell"><a href="https://www.sylabs.io/guides/2.6/user-guide/quick_start.html#shell"><code>shell</code></a></h3>
+<p>Run an interactive shell inside the container</p>
+<pre><code>singularity shell -s /bin/bash sl-linux.simg</code></pre>
+<ul>
+<li>Use a different shell sh with <code>-s/--shell</code></li>
+</ul>
+</section>
+</section>
+<section id="runtime-config" class="slide level1">
+<h1>Runtime Config</h1>
+<section>
+</section>
+<section id="section-13" class="slide level1">
+<h1></h1>
+<p>Docker links take the form of:</p>
+<pre><code>docker://[registry]/[namespace]/&lt;repo_name&gt;:[repo_tag]</code></pre>
+<p><br></p>
+<ul>
+<li>Registry: default [index.docker.io]</li>
+<li>Namespace: username, org, or the default [library]</li>
+<li>Repo: image name</li>
+<li>Tag: name (e.g. latest) or hash (e.g. <span class="citation" data-cites="sha256:1234">@sha256:1234</span>...)</li>
+</ul>
+</section>
+<section id="section-14" class="slide level1">
+<h1></h1>
+<p>Set environment variables before running singularity:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># prefixing new variables with with SINGULARITYENV_</span>
+<span class="bu">export</span> <span class="va">SINGULARITYENV_BLASTDB=</span>/data/db/blast</code></pre></div>
+<p>To modify <code>PATH</code>:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="bu">export</span> <span class="va">SINGULARITYENV_PREPEND_PATH=</span>/opt/important/bin
+<span class="bu">export</span> <span class="va">SINGULARITYENV_APPEND_PATH=</span>/opt/fallback/bin
+<span class="bu">export</span> <span class="va">SINGULARITYENV_PATH=</span>/only/path</code></pre></div>
+</section>
+<section id="section-15" class="slide level1">
+<h1></h1>
+<p>To change where image files are cached:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># default is ~/.singularity</span>
+<span class="bu">export</span> <span class="va">SINGULARITY_CACHEDIR=</span>~/scratch60/.singularity
+<span class="co"># or</span>
+<span class="bu">export</span> <span class="va">SINGULARITY_CACHEDIR=</span>/tmp/<span class="va">${USER}</span>/.singularity</code></pre></div>
+<p>( .singularity can get big fast )</p>
+</section>
+<section id="section-16" class="slide level1">
+<h1></h1>
+<p>Add host directory to the container with <code>-B/--bind</code>:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">singularity</span> run --bind /path/outside:/path/inside \
+   my_container.simg</code></pre></div>
+<p>A Container may expect files somewhere, e.g. <code>/data</code></p>
+</section>
+<section id="section-17" class="slide level1">
+<h1></h1>
+<p>To specify Docker Hub credentials:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">set</span> <span class="ex">+o</span> history
+<span class="bu">export</span> <span class="va">SINGULARITY_DOCKER_USERNAME=</span>brevans
+<span class="bu">export</span> <span class="va">SINGULARITY_DOCKER_PASSWORD=</span>password123
+<span class="kw">set</span> <span class="ex">-o</span> history</code></pre></div>
+<p>!! Be wary of storing credentials in your shell history !!</p>
+</section>
+<section id="section-18" class="slide level1">
+<h1></h1>
+<p>Quick way to determine which files are included in image:</p>
+<pre><code>singularity run/exec/shell --containall ...</code></pre>
+<p>Only container image files are available.</p>
+</section>
+<section id="section-19" class="slide level1">
+<h1></h1>
+<p>Bind GPU drivers properly with CUDA runtime installed inside container:</p>
+<pre><code>singularity run/exec/shell --nv ...</code></pre>
+</section>
+<section id="section-20" class="slide level1">
+<h1></h1>
+<p>MPI:</p>
+<p>I don't have loads of Singularity+MPI experience</p>
+<p>Having recent and same version in container and on host is usually sufficient</p>
+Please reach out if you are trying something interesting!
+</section>
+</section>
+<section id="rstudio-example" class="slide level1">
+<h1>RStudio Example</h1>
+<section>
+<p>I want to run the newest RStudio and tidyverse.</p>
+<p>see: <a href="https://www.rocker-project.org/">rocker-project.org</a></p>
+</section>
+<section id="section-21" class="slide level1">
+<h1></h1>
+<p>job file:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co">#!/bin/bash</span>
+<span class="co">#SBATCH -c 4 -t 2-00:00:00</span>
+<span class="fu">mkdir</span> -p /tmp/<span class="va">${USER}</span>
+<span class="bu">export</span> <span class="va">SINGULARITYENV_DISABLE_AUTH=</span>true
+<span class="ex">singularity</span> run -B /tmp/<span class="va">${USER}</span>:/tmp \
+   docker://rocker/geospatial:3.5.1</code></pre></div>
+</section>
+<section id="section-22" class="slide level1">
+<h1></h1>
+<p>Reverse <code>ssh</code> tunnel:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">ssh</span> -NL 8787:cxxnxx:8787 grace.hpc.yale.edu</code></pre></div>
+<p>Then connect to http://localhost:8787</p>
+</section>
+<section id="section-23" class="slide level1">
+<h1></h1>
+<p>Not ideal...</p>
+<ul>
+<li><a href="https://support.rstudio.com/hc/en-us/articles/200552316-Configuring-the-Server">According to docs</a>, we have to rebuild the container</li>
+<li>Change <code>/etc/rstudio/rserver.conf</code></li>
+</ul>
+</section>
+</section>
+<section id="dev-workflow" class="slide level1">
+<h1>Dev Workflow</h1>
+<section>
+<p>When you have to configure your own</p>
+</section>
+<section id="section-24" class="slide level1">
+<h1></h1>
+<figure>
+<img src="img/workflow_diagram.svg" />
+</figure>
+</section>
+<section id="section-25" class="slide level1">
+<h1></h1>
+<h3 id="reasoning">Reasoning</h3>
+<ul>
+<li>Docker/Docker Hub ecosystem large, stable</li>
+<li>Docker re-builds can be faster</li>
+<li>Docker Hub can auto-build github repos</li>
+<li>More easily use docker on other platforms</li>
+</ul>
+</section>
+<section id="section-26" class="slide level1">
+<h1></h1>
+<h3 id="best-practices">Best Practices</h3>
+<ul>
+<li>Don’t install anything to root’s home, <code>/root</code></li>
+<li>Don’t put container valuables in <code>$TMP</code> or <code>$HOME</code></li>
+<li>Use <code>ENTRYPOINT</code> to specify default runtime behavior</li>
+<li>Update shared library cache by calling <code>ldconfig</code> at the end of your <code>Dockerfile</code></li>
+</ul>
+</section>
+</section>
+<section id="dockerfiles" class="slide level1">
+<h1><a href="https://docs.docker.com/engine/reference/builder">Dockerfiles</a></h1>
+<section>
+<p>A half-fix for my RStudio issue</p>
+<div class="sourceCode"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span class="kw">FROM</span> rocker/geospatial:3.5.1
+<span class="kw">LABEL</span> maintainer=<span class="st">&quot;b.evans@yale.edu&quot;</span> version=0.01
+
+<span class="kw">ENV</span> RSTUDIO_PORT=30301
+<span class="kw">RUN</span> echo <span class="st">&quot;www-port=${RSTUDIO_PORT}&quot;</span> &gt;&gt; /etc/rstudio/rserver.conf</code></pre></div>
+</section>
+<section id="section-27" class="slide level1">
+<h1></h1>
+<ul>
+<li>Recipes for container images</li>
+<li>File always named <code>Dockerfile</code></li>
+<li></li>
+</ul>
+</section>
+<section id="section-28" class="slide level1">
+<h1></h1>
+<h2 id="from"><a href="https://docs.docker.com/engine/reference/builder/#from">FROM</a></h2>
+<p>Sets base image</p>
+<div class="sourceCode"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span class="kw">FROM</span> ubuntu:bionic
+<span class="kw">FROM</span> ubuntu@sha256:6d0e0c26489e33f5a6f0020edface2727db9489744ecc9b4f50c7fa671f23c49</code></pre></div>
+<ul>
+<li>Required, usually first</li>
+<li>Hashes are more reproducible.</li>
+</ul>
+</section>
+<section id="section-29" class="slide level1">
+<h1></h1>
+<h2 id="label"><a href="https://docs.docker.com/engine/reference/builder/#label">LABEL</a></h2>
+<p>Annotate your container image with metadata.</p>
+<div class="sourceCode"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span class="kw">LABEL</span> maintainer=<span class="st">&quot;ben evans &lt;b.evans@yale.edu&gt;&quot;</span>
+<span class="kw">LABEL</span> help=<span class="st">&quot;help message&quot;</span></code></pre></div>
+<ul>
+<li>Good to at least specify a maintainer email.</li>
+</ul>
+</section>
+<section id="section-30" class="slide level1">
+<h1></h1>
+<h2 id="env"><a href="https://docs.docker.com/engine/reference/builder/#env">ENV</a></h2>
+<p>Set environment variables.</p>
+<div class="sourceCode"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span class="kw">ENV</span> PATH=/opt/my_app/bin:$PATH MY_DB=/opt/my_app/db ...</code></pre></div>
+<ul>
+<li>Available for subsequent layers, and at runtime.</li>
+</ul>
+</section>
+<section id="section-31" class="slide level1">
+<h1></h1>
+<h2 id="run-1"><a href="https://docs.docker.com/engine/reference/builder/#run">RUN</a></h2>
+<p>Run commands to build your image.</p>
+<div class="sourceCode"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span class="kw">RUN</span> apt-get update &amp;&amp; \
+    apt-get install openmpi-bin \
+                    openmpi-common \
+                    wget \
+                    vim </code></pre></div>
+<ul>
+<li>Each <code>RUN</code> instruction is a separate layer.</li>
+<li>Suggested style: one package per line, alphabetical</li>
+</ul>
+</section>
+<section id="section-32" class="slide level1">
+<h1></h1>
+<h2 id="copy"><a href="https://docs.docker.com/engine/reference/builder/#copy">COPY</a></h2>
+<p>Copy files from your computer to the image.</p>
+<div class="sourceCode"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span class="kw">COPY</span> &lt;host_src&gt;... &lt;container_dest&gt;</code></pre></div>
+<ul>
+<li>I usually try to download them instead</li>
+</ul>
+</section>
+<section id="section-33" class="slide level1">
+<h1></h1>
+<h2 id="entrypoint"><a href="https://docs.docker.com/engine/reference/builder/#entrypoint">ENTRYPOINT</a></h2>
+<p>Specify a default action.</p>
+<div class="sourceCode"><pre class="sourceCode dockerfile"><code class="sourceCode dockerfile"><span class="kw">ENTRYPOINT</span> [<span class="st">&quot;/opt/conda/bin/ipython&quot;</span>, <span class="st">&quot;notebook&quot;</span>]</code></pre></div>
+<ul>
+<li>Used for docker run and singularity run.</li>
+</ul>
+</section>
+</section>
+<section id="docker-dev" class="slide level1">
+<h1>Docker Dev</h1>
+<section>
+</section>
+<section id="section-34" class="slide level1">
+<h1></h1>
+<h3 id="tips">Tips</h3>
+<ul>
+<li>Put most troublesome RUNs at the end</li>
+<li>Use git to version your Dockerfile</li>
+<li><strong>Only</strong> use ENTRYPOINT (not CMD) if you plan to use Singularity</li>
+<li><p>Use <a href="https://docs.docker.com/engine/reference/commandline/inspect/">docker inspect</a> to get container image info</p>
+<pre><code>docker inspect ubuntu:bionic
+docker inspect --format=&#39;{{index .RepoDigests 0}}&#39; ubuntu:bionic</code></pre></li>
+</ul>
+</section>
+<section id="section-35" class="slide level1">
+<h1></h1>
+<h3 id="build-1"><a href="https://docs.docker.com/engine/reference/commandline/build/"><code>build</code></a></h3>
+<p>How to build locally</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="bu">cd</span> /path/to/Dockerfile_dir/
+<span class="ex">docker</span> build -t custom_ubuntu:testing .</code></pre></div>
+<ul>
+<li>use -t to tag your builds</li>
+</ul>
+</section>
+<section id="section-36" class="slide level1">
+<h1></h1>
+<h3 id="image-list"><a href="https://docs.docker.com/engine/reference/commandline/image_ls/">Image List</a></h3>
+<p>How to get a list of container images on your computer</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">docker</span> image ls
+<span class="ex">REPOSITORY</span>      TAG     IMAGE ID      CREATED       SIZE
+<span class="ex">rocker/rstudio</span>  latest  879f3fd2bee9  39 hours ago  1.12GB
+<span class="ex">ubuntu</span>          bionic  93fd78260bd1  13 days ago   86.2MB</code></pre></div>
+</section>
+<section id="section-37" class="slide level1">
+<h1></h1>
+<h3 id="run-2"><a href="https://docs.docker.com/engine/reference/run/"><code>run</code></a></h3>
+<p>How to run Docker locally</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># default</span>
+<span class="ex">docker</span> run --rm /bin/bash custom_ubuntu:testing
+<span class="co"># interactive</span>
+<span class="ex">docker</span> run --rm -ti --entrypoint /bin/bash custom_ubuntu:testing </code></pre></div>
+<ul>
+<li>use <code>--rm</code> to clean up container after it exits</li>
+</ul>
+</section>
+<section id="section-38" class="slide level1">
+<h1></h1>
+<h3 id="push"><a href="https://docs.docker.com/docker-cloud/builds/push-images/"><code>push</code></a></h3>
+<p>Send your container to Docker Hub for use elsewhere</p>
+<pre><code>export DOCKER_ID_USER=&quot;username&quot;
+docker login
+docker tag custom_ubuntu:testing $DOCKER_ID_USER/my_image:v0.1
+docker push $DOCKER_ID_USER/my_image</code></pre>
+</section>
+<section id="section-39" class="slide level1">
+<h1></h1>
+<h3 id="prune"><a href="https://docs.docker.com/engine/reference/commandline/system_prune/"><code>prune</code></a></h3>
+<p>Clean up every now and again.</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">docker</span> system prune
+<span class="ex">WARNING</span>! This will remove:
+        <span class="ex">-</span> all stopped containers
+        <span class="ex">-</span> all networks not used by at least one container
+        <span class="ex">-</span> all dangling images
+        <span class="ex">-</span> all dangling build cache
+<span class="ex">Are</span> you sure you want to continue? [y/N]</code></pre></div>
+</section>
+</section>
+<section id="links" class="slide level1">
+<h1>Links</h1>
+<section>
+<p><a href="https://docs.docker.com/">Docker Documentation</a></p>
+<p>Install Docker on <a href="https://docs.docker.com/docker-for-mac/">MacOS</a>, <a href="https://docs.docker.com/docker-for-windows/">Windows</a>, and <a href="https://docs.docker.com/install/linux/ubuntu/">Linux</a></p>
+<p><a href="https://hub.docker.com/_/ubuntu/">Ubuntu</a> and <a href="https://hub.docker.com/_/centos/">CentOS</a> <a href="https://hub.docker.com/">Docker Hub</a> pages</p>
+<p><a href="https://docs.docker.com/engine/reference/builder"><code>Dockerfile</code> reference</a></p>
+<p><a href="https://docs.docker.com/engine/reference/commandline/docker/"><code>docker</code> CLI reference</a></p>
+</section>
+<section id="section-40" class="slide level1">
+<h1></h1>
+<p><a href="https://www.sylabs.io/docs/">Singularity Documentation</a></p>
+<p>Install Singularity <a href="https://www.sylabs.io/guides/3.0/user-guide/quick_start.html#quick-installation-steps">v3</a> and <a href="https://www.sylabs.io/guides/2.6/user-guide/installation.html">v2</a></p>
+<p>Container <a href="https://www.sylabs.io/guides/2.6/user-guide/container_recipes.html#container-recipes">recipe reference</a></p>
+YCRC <a href="https://research.computing.yale.edu/support/hpc/user-guide/singularity-yale">abridged Singularity docs</a>
+</section>
+</section>
+    </div>
+  </div>
+
+  <script src="https://revealjs.com/lib/js/head.min.js"></script>
+  <script src="https://revealjs.com/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'https://revealjs.com/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'https://revealjs.com/plugin/zoom-js/zoom.js', async: true },
+              { src: 'https://revealjs.com/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
