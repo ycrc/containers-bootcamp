@@ -271,7 +271,7 @@ When you have to configure your own
 
 - Don’t install anything to root’s home, `/root`
 - Don’t put container valuables in `$TMP` or `$HOME`
-- Use `ENTRYPOINT` to specify default runtime behavior
+- Use `ENTRYPOINT` to for default runtime behavior
 - Update shared library cache by calling `ldconfig` at the end of your `Dockerfile`
 </section>
 
@@ -398,11 +398,11 @@ docker run --rm -ti --entrypoint /bin/bash custom_ubuntu:testing
 # 
 ### [`push`](https://docs.docker.com/docker-cloud/builds/push-images/)
 Send your container to Docker Hub for use elsewhere
-```
-export DOCKER_ID_USER="username"
+```bash
+export DOCKER_USERNAME="username"
 docker login
-docker tag custom_ubuntu:testing $DOCKER_ID_USER/my_image:v0.1
-docker push $DOCKER_ID_USER/my_image
+docker tag custom_ubuntu:testing ${DOCKER_USERNAME}/my_image:v0.1
+docker push ${DOCKER_USERNAME}/my_image
 ```
 
 # 

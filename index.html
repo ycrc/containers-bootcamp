@@ -401,7 +401,7 @@ Please reach out if you are trying something interesting!
 <ul>
 <li>Don’t install anything to root’s home, <code>/root</code></li>
 <li>Don’t put container valuables in <code>$TMP</code> or <code>$HOME</code></li>
-<li>Use <code>ENTRYPOINT</code> to specify default runtime behavior</li>
+<li>Use <code>ENTRYPOINT</code> to for default runtime behavior</li>
 <li>Update shared library cache by calling <code>ldconfig</code> at the end of your <code>Dockerfile</code></li>
 </ul>
 </section>
@@ -537,10 +537,10 @@ docker inspect --format=&#39;{{index .RepoDigests 0}}&#39; ubuntu:bionic</code><
 <h1></h1>
 <h3 id="push"><a href="https://docs.docker.com/docker-cloud/builds/push-images/"><code>push</code></a></h3>
 <p>Send your container to Docker Hub for use elsewhere</p>
-<pre><code>export DOCKER_ID_USER=&quot;username&quot;
-docker login
-docker tag custom_ubuntu:testing $DOCKER_ID_USER/my_image:v0.1
-docker push $DOCKER_ID_USER/my_image</code></pre>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="bu">export</span> <span class="va">DOCKER_USERNAME=</span><span class="st">&quot;username&quot;</span>
+<span class="ex">docker</span> login
+<span class="ex">docker</span> tag custom_ubuntu:testing <span class="va">${DOCKER_USERNAME}</span>/my_image:v0.1
+<span class="ex">docker</span> push <span class="va">${DOCKER_USERNAME}</span>/my_image</code></pre></div>
 </section>
 <section id="section-39" class="slide level1">
 <h1></h1>
