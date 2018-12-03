@@ -260,7 +260,6 @@ When you have to configure your own
 
 # 
 ### Reasoning
-
 - Docker/Docker Hub ecosystem large, stable
 - Docker re-builds can be faster
 - Docker Hub can auto-build github repos
@@ -268,7 +267,6 @@ When you have to configure your own
 
 # 
 ### Best Practices
-
 - Don’t install anything to root’s home, `/root`
 - Don’t put container valuables in `$TMP` or `$HOME`
 - Use `ENTRYPOINT` to specify default runtime behavior
@@ -277,8 +275,8 @@ When you have to configure your own
 
 # [Dockerfiles](https://docs.docker.com/engine/reference/builder)
 <section>
-A half-fix for my RStudio issue
 
+A half-fix for my RStudio issue
 ```dockerfile
 FROM rocker/geospatial:3.5.1
 LABEL maintainer="b.evans@yale.edu" version=0.01
@@ -286,15 +284,14 @@ LABEL maintainer="b.evans@yale.edu" version=0.01
 ENV RSTUDIO_PORT=30301
 RUN echo "www-port=${RSTUDIO_PORT}" >> /etc/rstudio/rserver.conf
 ```
+
 # 
 - Recipes for container images
-- File always named `Dockerfile`
-- 
+- Plain text file always named `Dockerfile`
 
 # 
 ## [FROM](https://docs.docker.com/engine/reference/builder/#from)
 Sets base image
-
 ```dockerfile
 FROM ubuntu:bionic
 FROM ubuntu@sha256:6d0e0c26489e33f5a6f0020edface2727db9489744ecc9b4f50c7fa671f23c49
@@ -317,7 +314,6 @@ Set environment variables.
 ```dockerfile
 ENV PATH=/opt/my_app/bin:$PATH MY_DB=/opt/my_app/db ...
 ```
-
 - Available for subsequent layers, and at runtime.
 
 # 
@@ -330,7 +326,6 @@ RUN apt-get update && \
                     wget \
                     vim 
 ```
-
 - Each `RUN` instruction is a separate layer.
 - Suggested style: one package per line, alphabetical
 
@@ -340,7 +335,6 @@ Copy files from your computer to the image.
 ```dockerfile
 COPY <host_src>... <container_dest>
 ```
-
 - I usually try to download them instead
 
 # 
@@ -349,7 +343,6 @@ Specify a default action.
 ```dockerfile
 ENTRYPOINT ["/opt/conda/bin/ipython", "notebook"]
 ```
-
 - Used for docker run and singularity run.
 </section>
 
