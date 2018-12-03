@@ -289,7 +289,6 @@ RUN echo "www-port=${RSTUDIO_PORT}" >> /etc/rstudio/rserver.conf
 # 
 - Recipes for container images
 - File always named `Dockerfile`
-- 
 
 # 
 ## [FROM](https://docs.docker.com/engine/reference/builder/#from)
