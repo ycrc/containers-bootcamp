@@ -274,6 +274,7 @@ When user is untrusted: run container as user
 <ul>
 <li>Default action specified by ENTRYPOINT</li>
 <li>Additional arguments are passed to default action</li>
+<li>If image is +x and on path, can just be executed</li>
 </ul>
 </section>
 <section id="section-14" class="slide level1">
@@ -303,9 +304,8 @@ When user is untrusted: run container as user
 </section>
 <section id="section-16" class="slide level1">
 <h1></h1>
-<p>Docker links take the form of:</p>
+<h3 id="docker-links">Docker Links</h3>
 <pre><code>docker://[registry]/[namespace]/&lt;repo_name&gt;:[repo_tag]</code></pre>
-<p><br></p>
 <ul>
 <li>Registry: default [index.docker.io]</li>
 <li>Namespace: username, org, or the default [library]</li>
@@ -315,6 +315,7 @@ When user is untrusted: run container as user
 </section>
 <section id="section-17" class="slide level1">
 <h1></h1>
+<h3 id="environment-variables">Environment Variables</h3>
 <p>Set environment variables before running singularity:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># prefixing new variables with with SINGULARITYENV_</span>
 <span class="bu">export</span> <span class="va">SINGULARITYENV_BLASTDB=</span>/data/db/blast</code></pre></div>
@@ -325,6 +326,7 @@ When user is untrusted: run container as user
 </section>
 <section id="section-18" class="slide level1">
 <h1></h1>
+<h3 id="cache-location">Cache Location</h3>
 <p>To change where image files are cached:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># default is ~/.singularity</span>
 <span class="bu">export</span> <span class="va">SINGULARITY_CACHEDIR=</span>~/scratch60/.singularity
@@ -334,6 +336,7 @@ When user is untrusted: run container as user
 </section>
 <section id="section-19" class="slide level1">
 <h1></h1>
+<h3 id="move-directories-around">Move Directories Around</h3>
 <p>Add host directory to the container with <code>-B/--bind</code>:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">singularity</span> run --bind /path/outside:/path/inside \
    my_container.simg</code></pre></div>
@@ -341,6 +344,7 @@ When user is untrusted: run container as user
 </section>
 <section id="section-20" class="slide level1">
 <h1></h1>
+<h3 id="private-dockerhub-repos">Private DockerHub Repos</h3>
 <p>To specify Docker Hub credentials:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">set</span> <span class="ex">+o</span> history
 <span class="bu">export</span> <span class="va">SINGULARITY_DOCKER_USERNAME=</span>brevans
@@ -350,19 +354,20 @@ When user is untrusted: run container as user
 </section>
 <section id="section-21" class="slide level1">
 <h1></h1>
-<p>Quick way to determine which files are included in image:</p>
+<h3 id="where-did-this-come-from">Where did this come from?</h3>
+<p>Quick way to determine which files are from image:</p>
 <pre><code>singularity run/exec/shell --containall ...</code></pre>
 <p>Only container image files are available.</p>
 </section>
 <section id="section-22" class="slide level1">
 <h1></h1>
-<p>Bind GPU drivers properly with CUDA runtime installed inside container:</p>
+<h3 id="gpus">GPUs</h3>
+<p>Bind GPU drivers properly when CUDA installed inside container:</p>
 <pre><code>singularity run/exec/shell --nv ...</code></pre>
 </section>
 <section id="section-23" class="slide level1">
 <h1></h1>
-<p>MPI:</p>
-<p>I don't have loads of Singularity+MPI experience</p>
+<h3 id="mpi">MPI</h3>
 <p>Having recent and same version in container and on host is usually sufficient</p>
 Please reach out if you are trying something interesting!
 </section>

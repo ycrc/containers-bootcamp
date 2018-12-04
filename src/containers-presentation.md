@@ -153,6 +153,7 @@ singularity run image.simg --arg=42
 ```
 - Default action specified by ENTRYPOINT
 - Additional arguments are passed to default action
+- If image is +x and on path, can just be executed
 
 # 
 ### [`exec`](https://www.sylabs.io/guides/2.6/user-guide/appendix.html#exec-command)
@@ -175,20 +176,20 @@ singularity shell -s /bin/bash sl-linux.simg
 
 # Runtime Config
 <section>
+
 # 
-Docker links take the form of:
+### Docker Links
 
 ```
 docker://[registry]/[namespace]/<repo_name>:[repo_tag]
 ```
-<br>
-
 - Registry: default [index.docker.io]
 - Namespace: username, org, or the default [library]
 - Repo: image name
 - Tag: name (e.g. latest) or hash (e.g. @sha256:1234...)
 
 # 
+### Environment Variables
 Set environment variables before running singularity:
 ```bash
 # prefixing new variables with with SINGULARITYENV_
@@ -202,6 +203,7 @@ export SINGULARITYENV_PATH=/only/path
 ```
 
 # 
+### Cache Location
 To change where image files are cached:
 ```bash
 # default is ~/.singularity
@@ -212,6 +214,7 @@ export SINGULARITY_CACHEDIR=/tmp/${USER}/.singularity
 ( .singularity can get big fast )
 
 # 
+### Move Directories Around
 Add host directory to the container with `-B/--bind`:
 ```bash
 singularity run --bind /path/outside:/path/inside \
@@ -220,6 +223,7 @@ singularity run --bind /path/outside:/path/inside \
 A Container may expect files somewhere, e.g. `/data`
 
 # 
+### Private DockerHub Repos
 To specify Docker Hub credentials:
 ```bash
 set +o history
@@ -230,22 +234,22 @@ set -o history
 !! Be wary of storing credentials in your shell history !!
 
 # 
-Quick way to determine which files are included in image:
+### Where did this come from?
+Quick way to determine which files are from image:
 ```
 singularity run/exec/shell --containall ...
 ```
 Only container image files are available.
 
 # 
-Bind GPU drivers properly with CUDA runtime installed inside container:
+### GPUs
+Bind GPU drivers properly when CUDA installed inside container:
 ```
 singularity run/exec/shell --nv ...
 ```
 
 #
-MPI:
-
-I don't have loads of Singularity+MPI experience
+### MPI
 
 Having recent and same version in container and on host is usually sufficient
 
