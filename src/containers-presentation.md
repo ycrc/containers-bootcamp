@@ -11,6 +11,13 @@ date: December 4, 2018
 - Development Workflow
     - Using Docker to build
 
+# Conventions
+```bash
+echo "this is one line of code split for \
+your viewing pleasure"
+```
+[This is a link](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+
 # Containers
 
 <section>
@@ -25,22 +32,38 @@ date: December 4, 2018
 ### Three methods of control
 
 - Process isolation 
-    - Linux [Namespaces](https://en.wikipedia.org/wiki/Linux_namespaces) (chrome uses for [sandboxes](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/linux_sandboxing.md))
-- Resource Limits 
-    - Linux [cgroups](https://en.wikipedia.org/wiki/Cgroups)
+- Resource Limits
 - Security
-    - When user is trusted: [SELinx](https://en.wikipedia.org/wiki/Security-Enhanced_Linux), [AppArmor](https://en.wikipedia.org/wiki/AppArmor)
-    - When user is untrusted: run container as user
 
-# 
+#
+### Isolation
+
+Linux [Namespaces](https://en.wikipedia.org/wiki/Linux_namespaces) for hiding various aspects of host system from container.
+
+- Can't see other processes
+- Can be used to modify networking
+- Chrome uses Namespaces for [sandboxes](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/linux_sandboxing.md)
+
+#
+### Resource Limits
+
+Linux [cgroups](https://en.wikipedia.org/wiki/Cgroups) to limit RAM, CPU cores, etc etc.
+
+#
+### Security
+
+When user is trusted: [SELinx](https://en.wikipedia.org/wiki/Security-Enhanced_Linux), [AppArmor](https://en.wikipedia.org/wiki/AppArmor)
+
+When user is untrusted: run container as user
+</section>
+
+# Should I Use Containers?
 | Pro                | Con                               |
 |--------------------|-----------------------------------|
-| Light-weight       | Linux best supported              |
-| Fast start time    | Another layer of abstraction      |
-| Batteries included | Additional development complexity |
-| Shareable          | Licensed software can be tricky   |
-| Reproducible       |                                   |
-</section>
+| Light-weight       | Often Linux-only                  |
+| Fast Startup       | Another layer of abstraction      |
+| Shareable          | Additional development complexity |
+| Reproducible       | Licensed software can be tricky   |
 
 # Example
 
@@ -64,6 +87,7 @@ srun --pty -p gpu -c 2 --gres gpu:1 --mem 24G \
 - Primary registry hub.docker.com
 
 # 
+### Design
 - Service runs to orchestrate
 - Images are composed of separate files: layers
 - Designed to be run with elevated privileges
@@ -87,9 +111,17 @@ srun --pty -p gpu -c 2 --gres gpu:1 --mem 24G \
     - cloud.sylabs.io/library
 
 # 
+### Design
 - No services needed to run
 - Images are single files
 - Designed to be run as unprivileged user
+
+#
+### Advantages
+- Admins are happy
+- Existing scripts, paths should work
+- No shuffling data around
+
 </section>
 
 # How To Singularity
@@ -109,7 +141,7 @@ singularity build my_container.simg \
 ```bash
 singularity run image.simg
 
-singularity exec docker://org/image program --option=value
+singularity exec docker://org/image Rscript analyze.R
 
 singularity shell -s /bin/bash shub://user/image
 ```

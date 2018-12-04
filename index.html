@@ -82,6 +82,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul>
 </section>
+<section id="conventions" class="slide level1">
+<h1>Conventions</h1>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="bu">echo</span> <span class="st">&quot;this is one line of code split for \</span>
+<span class="st">your viewing pleasure&quot;</span></code></pre></div>
+<p><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">This is a link</a></p>
+</section>
 <section id="containers" class="slide level1">
 <h1>Containers</h1>
 <section>
@@ -98,23 +104,35 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1></h1>
 <h3 id="three-methods-of-control">Three methods of control</h3>
 <ul>
-<li>Process isolation
-<ul>
-<li>Linux <a href="https://en.wikipedia.org/wiki/Linux_namespaces">Namespaces</a> (chrome uses for <a href="https://chromium.googlesource.com/chromium/src/+/HEAD/docs/linux_sandboxing.md">sandboxes</a>)</li>
-</ul></li>
-<li>Resource Limits
-<ul>
-<li>Linux <a href="https://en.wikipedia.org/wiki/Cgroups">cgroups</a></li>
-</ul></li>
-<li>Security
-<ul>
-<li>When user is trusted: <a href="https://en.wikipedia.org/wiki/Security-Enhanced_Linux">SELinx</a>, <a href="https://en.wikipedia.org/wiki/AppArmor">AppArmor</a></li>
-<li>When user is untrusted: run container as user</li>
-</ul></li>
+<li>Process isolation</li>
+<li>Resource Limits</li>
+<li>Security</li>
 </ul>
 </section>
 <section id="section-2" class="slide level1">
 <h1></h1>
+<h3 id="isolation">Isolation</h3>
+<p>Linux <a href="https://en.wikipedia.org/wiki/Linux_namespaces">Namespaces</a> for hiding various aspects of host system from container.</p>
+<ul>
+<li>Can't see other processes</li>
+<li>Can be used to modify networking</li>
+<li>Chrome uses Namespaces for <a href="https://chromium.googlesource.com/chromium/src/+/HEAD/docs/linux_sandboxing.md">sandboxes</a></li>
+</ul>
+</section>
+<section id="section-3" class="slide level1">
+<h1></h1>
+<h3 id="resource-limits">Resource Limits</h3>
+<p>Linux <a href="https://en.wikipedia.org/wiki/Cgroups">cgroups</a> to limit RAM, CPU cores, etc etc.</p>
+</section>
+<section id="section-4" class="slide level1">
+<h1></h1>
+<h3 id="security">Security</h3>
+<p>When user is trusted: <a href="https://en.wikipedia.org/wiki/Security-Enhanced_Linux">SELinx</a>, <a href="https://en.wikipedia.org/wiki/AppArmor">AppArmor</a></p>
+When user is untrusted: run container as user
+</section>
+</section>
+<section id="should-i-use-containers" class="slide level1">
+<h1>Should I Use Containers?</h1>
 <table>
 <thead>
 <tr class="header">
@@ -125,27 +143,22 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <tbody>
 <tr class="odd">
 <td>Light-weight</td>
-<td>Linux best supported</td>
+<td>Often Linux-only</td>
 </tr>
 <tr class="even">
-<td>Fast start time</td>
+<td>Fast Startup</td>
 <td>Another layer of abstraction</td>
 </tr>
 <tr class="odd">
-<td>Batteries included</td>
+<td>Shareable</td>
 <td>Additional development complexity</td>
 </tr>
 <tr class="even">
-<td>Shareable</td>
-<td>Licensed software can be tricky</td>
-</tr>
-<tr class="odd">
 <td>Reproducible</td>
-<td></td>
+<td>Licensed software can be tricky</td>
 </tr>
 </tbody>
 </table>
-</section>
 </section>
 <section id="example" class="slide level1">
 <h1>Example</h1>
@@ -161,7 +174,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <img src="img/docker_logo.svg" />
 </figure>
 </section>
-<section id="section-3" class="slide level1">
+<section id="section-5" class="slide level1">
 <h1></h1>
 <ul>
 <li>Most popular container application</li>
@@ -173,15 +186,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Primary registry hub.docker.com</li>
 </ul>
 </section>
-<section id="section-4" class="slide level1">
+<section id="section-6" class="slide level1">
 <h1></h1>
+<h3 id="design">Design</h3>
 <ul>
 <li>Service runs to orchestrate</li>
 <li>Images are composed of separate files: layers</li>
 <li>Designed to be run with elevated privileges</li>
 </ul>
 </section>
-<section id="section-5" class="slide level1">
+<section id="section-7" class="slide level1">
 <h1></h1>
 <img src="img/docker_layout.png" />
 </section>
@@ -193,7 +207,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <img src="img/singularity_logo.png" />
 </figure>
 </section>
-<section id="section-6" class="slide level1">
+<section id="section-8" class="slide level1">
 <h1></h1>
 <ul>
 <li>Released in 2016, <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0177459">paper in 2017</a></li>
@@ -209,12 +223,22 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul>
 </section>
-<section id="section-7" class="slide level1">
+<section id="section-9" class="slide level1">
 <h1></h1>
+<h3 id="design-1">Design</h3>
 <ul>
 <li>No services needed to run</li>
 <li>Images are single files</li>
 <li>Designed to be run as unprivileged user</li>
+</ul>
+</section>
+<section id="section-10" class="slide level1">
+<h1></h1>
+<h3 id="advantages">Advantages</h3>
+<ul>
+<li>Admins are happy</li>
+<li>Existing scripts, paths should work</li>
+<li>No shuffling data around</li>
 </ul>
 </section>
 </section>
@@ -222,7 +246,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1>How To Singularity</h1>
 <section>
 </section>
-<section id="section-8" class="slide level1">
+<section id="section-11" class="slide level1">
 <h1></h1>
 <h3 id="build"><a href="https://www.sylabs.io/guides/2.6/user-guide/appendix.html#build-command"><code>build</code></a></h3>
 <p>Build a singularity image (on the clusters)</p>
@@ -233,16 +257,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Can also copy an image file from elsewhere</li>
 </ul>
 </section>
-<section id="section-9" class="slide level1">
+<section id="section-12" class="slide level1">
 <h1></h1>
 <h3 id="run-the-container">Run the Container</h3>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">singularity</span> run image.simg
 
-<span class="ex">singularity</span> exec docker://org/image program --option=value
+<span class="ex">singularity</span> exec docker://org/image Rscript analyze.R
 
 <span class="ex">singularity</span> shell -s /bin/bash shub://user/image</code></pre></div>
 </section>
-<section id="section-10" class="slide level1">
+<section id="section-13" class="slide level1">
 <h1></h1>
 <h3 id="run"><a href="https://www.sylabs.io/guides/2.6/user-guide/quick_start.html#running-a-container"><code>run</code></a></h3>
 <p>Execute the default behavior</p>
@@ -252,7 +276,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Additional arguments are passed to default action</li>
 </ul>
 </section>
-<section id="section-11" class="slide level1">
+<section id="section-14" class="slide level1">
 <h1></h1>
 <h3 id="exec"><a href="https://www.sylabs.io/guides/2.6/user-guide/appendix.html#exec-command"><code>exec</code></a></h3>
 <p>Run a command inside the container</p>
@@ -263,7 +287,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Must exist/be on the <code>PATH</code> inside container</li>
 </ul>
 </section>
-<section id="section-12" class="slide level1">
+<section id="section-15" class="slide level1">
 <h1></h1>
 <h3 id="shell"><a href="https://www.sylabs.io/guides/2.6/user-guide/quick_start.html#shell"><code>shell</code></a></h3>
 <p>Run an interactive shell inside the container</p>
@@ -277,7 +301,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1>Runtime Config</h1>
 <section>
 </section>
-<section id="section-13" class="slide level1">
+<section id="section-16" class="slide level1">
 <h1></h1>
 <p>Docker links take the form of:</p>
 <pre><code>docker://[registry]/[namespace]/&lt;repo_name&gt;:[repo_tag]</code></pre>
@@ -289,7 +313,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Tag: name (e.g. latest) or hash (e.g. <span class="citation" data-cites="sha256:1234">@sha256:1234</span>...)</li>
 </ul>
 </section>
-<section id="section-14" class="slide level1">
+<section id="section-17" class="slide level1">
 <h1></h1>
 <p>Set environment variables before running singularity:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># prefixing new variables with with SINGULARITYENV_</span>
@@ -299,7 +323,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="bu">export</span> <span class="va">SINGULARITYENV_APPEND_PATH=</span>/opt/fallback/bin
 <span class="bu">export</span> <span class="va">SINGULARITYENV_PATH=</span>/only/path</code></pre></div>
 </section>
-<section id="section-15" class="slide level1">
+<section id="section-18" class="slide level1">
 <h1></h1>
 <p>To change where image files are cached:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># default is ~/.singularity</span>
@@ -308,14 +332,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="bu">export</span> <span class="va">SINGULARITY_CACHEDIR=</span>/tmp/<span class="va">${USER}</span>/.singularity</code></pre></div>
 <p>( .singularity can get big fast )</p>
 </section>
-<section id="section-16" class="slide level1">
+<section id="section-19" class="slide level1">
 <h1></h1>
 <p>Add host directory to the container with <code>-B/--bind</code>:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">singularity</span> run --bind /path/outside:/path/inside \
    my_container.simg</code></pre></div>
 <p>A Container may expect files somewhere, e.g. <code>/data</code></p>
 </section>
-<section id="section-17" class="slide level1">
+<section id="section-20" class="slide level1">
 <h1></h1>
 <p>To specify Docker Hub credentials:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">set</span> <span class="ex">+o</span> history
@@ -324,18 +348,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="kw">set</span> <span class="ex">-o</span> history</code></pre></div>
 <p>!! Be wary of storing credentials in your shell history !!</p>
 </section>
-<section id="section-18" class="slide level1">
+<section id="section-21" class="slide level1">
 <h1></h1>
 <p>Quick way to determine which files are included in image:</p>
 <pre><code>singularity run/exec/shell --containall ...</code></pre>
 <p>Only container image files are available.</p>
 </section>
-<section id="section-19" class="slide level1">
+<section id="section-22" class="slide level1">
 <h1></h1>
 <p>Bind GPU drivers properly with CUDA runtime installed inside container:</p>
 <pre><code>singularity run/exec/shell --nv ...</code></pre>
 </section>
-<section id="section-20" class="slide level1">
+<section id="section-23" class="slide level1">
 <h1></h1>
 <p>MPI:</p>
 <p>I don't have loads of Singularity+MPI experience</p>
@@ -349,7 +373,7 @@ Please reach out if you are trying something interesting!
 <p>I want to run the newest RStudio and tidyverse.</p>
 <p>see: <a href="https://www.rocker-project.org/">rocker-project.org</a></p>
 </section>
-<section id="section-21" class="slide level1">
+<section id="section-24" class="slide level1">
 <h1></h1>
 <p>job file:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co">#!/bin/bash</span>
@@ -359,13 +383,13 @@ Please reach out if you are trying something interesting!
 <span class="ex">singularity</span> run -B /tmp/<span class="va">${USER}</span>:/tmp \
    docker://rocker/geospatial:3.5.1</code></pre></div>
 </section>
-<section id="section-22" class="slide level1">
+<section id="section-25" class="slide level1">
 <h1></h1>
 <p>Reverse <code>ssh</code> tunnel:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">ssh</span> -NL 8787:cxxnxx:8787 grace.hpc.yale.edu</code></pre></div>
 <p>Then connect to http://localhost:8787</p>
 </section>
-<section id="section-23" class="slide level1">
+<section id="section-26" class="slide level1">
 <h1></h1>
 <p>Not ideal...</p>
 <ul>
@@ -379,13 +403,13 @@ Please reach out if you are trying something interesting!
 <section>
 <p>When you have to configure your own</p>
 </section>
-<section id="section-24" class="slide level1">
+<section id="section-27" class="slide level1">
 <h1></h1>
 <figure>
 <img src="img/workflow_diagram.svg" />
 </figure>
 </section>
-<section id="section-25" class="slide level1">
+<section id="section-28" class="slide level1">
 <h1></h1>
 <h3 id="reasoning">Reasoning</h3>
 <ul>
@@ -395,7 +419,7 @@ Please reach out if you are trying something interesting!
 <li>More easily use docker on other platforms</li>
 </ul>
 </section>
-<section id="section-26" class="slide level1">
+<section id="section-29" class="slide level1">
 <h1></h1>
 <h3 id="best-practices">Best Practices</h3>
 <ul>
@@ -416,14 +440,14 @@ Please reach out if you are trying something interesting!
 <span class="kw">ENV</span> RSTUDIO_PORT=30301
 <span class="kw">RUN</span> echo <span class="st">&quot;www-port=${RSTUDIO_PORT}&quot;</span> &gt;&gt; /etc/rstudio/rserver.conf</code></pre></div>
 </section>
-<section id="section-27" class="slide level1">
+<section id="section-30" class="slide level1">
 <h1></h1>
 <ul>
 <li>Recipes for container images</li>
 <li>File always named <code>Dockerfile</code></li>
 </ul>
 </section>
-<section id="section-28" class="slide level1">
+<section id="section-31" class="slide level1">
 <h1></h1>
 <h2 id="from"><a href="https://docs.docker.com/engine/reference/builder/#from">FROM</a></h2>
 <p>Sets base image</p>
@@ -434,7 +458,7 @@ Please reach out if you are trying something interesting!
 <li>Hashes are more reproducible.</li>
 </ul>
 </section>
-<section id="section-29" class="slide level1">
+<section id="section-32" class="slide level1">
 <h1></h1>
 <h2 id="label"><a href="https://docs.docker.com/engine/reference/builder/#label">LABEL</a></h2>
 <p>Annotate your container image with metadata.</p>
@@ -444,7 +468,7 @@ Please reach out if you are trying something interesting!
 <li>Good to at least specify a maintainer email.</li>
 </ul>
 </section>
-<section id="section-30" class="slide level1">
+<section id="section-33" class="slide level1">
 <h1></h1>
 <h2 id="env"><a href="https://docs.docker.com/engine/reference/builder/#env">ENV</a></h2>
 <p>Set environment variables.</p>
@@ -453,7 +477,7 @@ Please reach out if you are trying something interesting!
 <li>Available for subsequent layers, and at runtime.</li>
 </ul>
 </section>
-<section id="section-31" class="slide level1">
+<section id="section-34" class="slide level1">
 <h1></h1>
 <h2 id="run-1"><a href="https://docs.docker.com/engine/reference/builder/#run">RUN</a></h2>
 <p>Run commands to build your image.</p>
@@ -467,7 +491,7 @@ Please reach out if you are trying something interesting!
 <li>Suggested style: one package per line, alphabetical</li>
 </ul>
 </section>
-<section id="section-32" class="slide level1">
+<section id="section-35" class="slide level1">
 <h1></h1>
 <h2 id="copy"><a href="https://docs.docker.com/engine/reference/builder/#copy">COPY</a></h2>
 <p>Copy files from your computer to the image.</p>
@@ -476,7 +500,7 @@ Please reach out if you are trying something interesting!
 <li>I usually try to download them instead</li>
 </ul>
 </section>
-<section id="section-33" class="slide level1">
+<section id="section-36" class="slide level1">
 <h1></h1>
 <h2 id="entrypoint"><a href="https://docs.docker.com/engine/reference/builder/#entrypoint">ENTRYPOINT</a></h2>
 <p>Specify a default action.</p>
@@ -490,7 +514,7 @@ Please reach out if you are trying something interesting!
 <h1>Docker Dev</h1>
 <section>
 </section>
-<section id="section-34" class="slide level1">
+<section id="section-37" class="slide level1">
 <h1></h1>
 <h3 id="tips">Tips</h3>
 <ul>
@@ -502,7 +526,7 @@ Please reach out if you are trying something interesting!
 docker inspect --format=&#39;{{index .RepoDigests 0}}&#39; ubuntu:bionic</code></pre></li>
 </ul>
 </section>
-<section id="section-35" class="slide level1">
+<section id="section-38" class="slide level1">
 <h1></h1>
 <h3 id="build-1"><a href="https://docs.docker.com/engine/reference/commandline/build/"><code>build</code></a></h3>
 <p>How to build locally</p>
@@ -512,7 +536,7 @@ docker inspect --format=&#39;{{index .RepoDigests 0}}&#39; ubuntu:bionic</code><
 <li>use -t to tag your builds</li>
 </ul>
 </section>
-<section id="section-36" class="slide level1">
+<section id="section-39" class="slide level1">
 <h1></h1>
 <h3 id="image-list"><a href="https://docs.docker.com/engine/reference/commandline/image_ls/">Image List</a></h3>
 <p>How to get a list of container images on your computer</p>
@@ -521,7 +545,7 @@ docker inspect --format=&#39;{{index .RepoDigests 0}}&#39; ubuntu:bionic</code><
 <span class="ex">rocker/rstudio</span>  latest  879f3fd2bee9  39 hours ago  1.12GB
 <span class="ex">ubuntu</span>          bionic  93fd78260bd1  13 days ago   86.2MB</code></pre></div>
 </section>
-<section id="section-37" class="slide level1">
+<section id="section-40" class="slide level1">
 <h1></h1>
 <h3 id="run-2"><a href="https://docs.docker.com/engine/reference/run/"><code>run</code></a></h3>
 <p>How to run Docker locally</p>
@@ -533,7 +557,7 @@ docker inspect --format=&#39;{{index .RepoDigests 0}}&#39; ubuntu:bionic</code><
 <li>use <code>--rm</code> to clean up container after it exits</li>
 </ul>
 </section>
-<section id="section-38" class="slide level1">
+<section id="section-41" class="slide level1">
 <h1></h1>
 <h3 id="push"><a href="https://docs.docker.com/docker-cloud/builds/push-images/"><code>push</code></a></h3>
 <p>Send your container to Docker Hub for use elsewhere</p>
@@ -542,7 +566,7 @@ docker inspect --format=&#39;{{index .RepoDigests 0}}&#39; ubuntu:bionic</code><
 <span class="ex">docker</span> tag custom_ubuntu:testing <span class="va">${DOCKER_USERNAME}</span>/my_image:v0.1
 <span class="ex">docker</span> push <span class="va">${DOCKER_USERNAME}</span>/my_image</code></pre></div>
 </section>
-<section id="section-39" class="slide level1">
+<section id="section-42" class="slide level1">
 <h1></h1>
 <h3 id="prune"><a href="https://docs.docker.com/engine/reference/commandline/system_prune/"><code>prune</code></a></h3>
 <p>Clean up every now and again.</p>
@@ -564,7 +588,7 @@ docker inspect --format=&#39;{{index .RepoDigests 0}}&#39; ubuntu:bionic</code><
 <p><a href="https://docs.docker.com/engine/reference/builder"><code>Dockerfile</code> reference</a></p>
 <p><a href="https://docs.docker.com/engine/reference/commandline/docker/"><code>docker</code> CLI reference</a></p>
 </section>
-<section id="section-40" class="slide level1">
+<section id="section-43" class="slide level1">
 <h1></h1>
 <p><a href="https://www.sylabs.io/docs/">Singularity Documentation</a></p>
 <p>Install Singularity <a href="https://www.sylabs.io/guides/3.0/user-guide/quick_start.html#quick-installation-steps">v3</a> and <a href="https://www.sylabs.io/guides/2.6/user-guide/installation.html">v2</a></p>
