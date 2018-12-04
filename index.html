@@ -534,7 +534,7 @@ docker inspect --format=&#39;{{index .RepoDigests 0}}&#39; ubuntu:bionic</code><
 <section id="section-38" class="slide level1">
 <h1></h1>
 <h3 id="build-1"><a href="https://docs.docker.com/engine/reference/commandline/build/"><code>build</code></a></h3>
-<p>How to build locally</p>
+<p>Build locally</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="bu">cd</span> /path/to/Dockerfile_dir/
 <span class="ex">docker</span> build -t custom_ubuntu:testing .</code></pre></div>
 <ul>
@@ -544,7 +544,7 @@ docker inspect --format=&#39;{{index .RepoDigests 0}}&#39; ubuntu:bionic</code><
 <section id="section-39" class="slide level1">
 <h1></h1>
 <h3 id="image-list"><a href="https://docs.docker.com/engine/reference/commandline/image_ls/">Image List</a></h3>
-<p>How to get a list of container images on your computer</p>
+<p>List container images on your computer</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">docker</span> image ls
 <span class="ex">REPOSITORY</span>      TAG     IMAGE ID      CREATED       SIZE
 <span class="ex">rocker/rstudio</span>  latest  879f3fd2bee9  39 hours ago  1.12GB
@@ -553,13 +553,15 @@ docker inspect --format=&#39;{{index .RepoDigests 0}}&#39; ubuntu:bionic</code><
 <section id="section-40" class="slide level1">
 <h1></h1>
 <h3 id="run-2"><a href="https://docs.docker.com/engine/reference/run/"><code>run</code></a></h3>
-<p>How to run Docker locally</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="co"># default</span>
-<span class="ex">docker</span> run --rm /bin/bash custom_ubuntu:testing
-<span class="co"># interactive</span>
+<p>Run Docker locally</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">docker</span> run --rm /bin/bash custom_ubuntu:testing
 <span class="ex">docker</span> run --rm -ti --entrypoint /bin/bash custom_ubuntu:testing </code></pre></div>
 <ul>
-<li>use <code>--rm</code> to clean up container after it exits</li>
+<li>Use <code>--rm</code> to clean up container after it exits</li>
+<li>Docker containers run like <code>--containall</code> by default
+<ul>
+<li>Use <code>--volume</code> to bind directories to container</li>
+</ul></li>
 </ul>
 </section>
 <section id="section-41" class="slide level1">

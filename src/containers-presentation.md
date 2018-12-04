@@ -403,7 +403,7 @@ docker inspect --format='{{index .RepoDigests 0}}' ubuntu:bionic
 
 # 
 ### [`build`](https://docs.docker.com/engine/reference/commandline/build/)
-How to build locally
+Build locally
 ```bash
 cd /path/to/Dockerfile_dir/
 docker build -t custom_ubuntu:testing .
@@ -412,7 +412,7 @@ docker build -t custom_ubuntu:testing .
 
 #
 ### [Image List](https://docs.docker.com/engine/reference/commandline/image_ls/)
-How to get a list of container images on your computer
+List container images on your computer
 ```bash
 docker image ls
 REPOSITORY      TAG     IMAGE ID      CREATED       SIZE
@@ -422,14 +422,14 @@ ubuntu          bionic  93fd78260bd1  13 days ago   86.2MB
 
 # 
 ### [`run`](https://docs.docker.com/engine/reference/run/)
-How to run Docker locally
+Run Docker locally
 ```bash
-# default
 docker run --rm /bin/bash custom_ubuntu:testing
-# interactive
 docker run --rm -ti --entrypoint /bin/bash custom_ubuntu:testing 
 ```
-- use `--rm` to clean up container after it exits
+- Use `--rm` to clean up container after it exits
+- Docker containers run like `--containall` by default
+    - Use `--volume` to bind directories to container
 
 # 
 ### [`push`](https://docs.docker.com/docker-cloud/builds/push-images/)
