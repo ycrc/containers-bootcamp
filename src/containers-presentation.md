@@ -424,7 +424,7 @@ ubuntu          bionic  93fd78260bd1  13 days ago   86.2MB
 ### [`run`](https://docs.docker.com/engine/reference/run/)
 Run Docker locally
 ```bash
-docker run --rm /bin/bash custom_ubuntu:testing
+docker run --rm custom_ubuntu:testing
 docker run --rm -ti --entrypoint /bin/bash custom_ubuntu:testing 
 ```
 - Use `--rm` to clean up container after it exits

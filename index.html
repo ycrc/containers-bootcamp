@@ -554,7 +554,7 @@ docker inspect --format=&#39;{{index .RepoDigests 0}}&#39; ubuntu:bionic</code><
 <h1></h1>
 <h3 id="run-2"><a href="https://docs.docker.com/engine/reference/run/"><code>run</code></a></h3>
 <p>Run Docker locally</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">docker</span> run --rm /bin/bash custom_ubuntu:testing
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">docker</span> run --rm custom_ubuntu:testing
 <span class="ex">docker</span> run --rm -ti --entrypoint /bin/bash custom_ubuntu:testing </code></pre></div>
 <ul>
 <li>Use <code>--rm</code> to clean up container after it exits</li>
