@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="Ben Evans">
+  <meta name="dcterms.date" content="2019-02-27">
   <title>HPC Containers with Singularity</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -67,7 +68,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <section>
   <h1 class="title">HPC Containers with Singularity</h1>
   <p class="author">Ben Evans</p>
-  <p class="date">December 4, 2018</p>
+  <p class="date">February 27, 2019</p>
 </section>
 
 <section id="outline-for-today" class="slide level1">
@@ -391,7 +392,7 @@ Please reach out if you are trying something interesting!
 <section id="section-25" class="slide level1">
 <h1></h1>
 <p>Reverse <code>ssh</code> tunnel:</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">ssh</span> -NL 8787:cxxnxx:8787 grace.hpc.yale.edu</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">ssh</span> -NL 8787:cxxnxx:8787 netid@grace.hpc.yale.edu</code></pre></div>
 <p>Then connect to http://localhost:8787</p>
 </section>
 <section id="section-26" class="slide level1">
@@ -430,8 +431,8 @@ Please reach out if you are trying something interesting!
 <ul>
 <li>Don’t install anything to root’s home, <code>/root</code></li>
 <li>Don’t put container valuables in <code>$TMP</code> or <code>$HOME</code></li>
-<li>Use <code>ENTRYPOINT</code> to for default runtime behavior</li>
-<li>Update shared library cache by calling <code>ldconfig</code> at the end of your <code>Dockerfile</code></li>
+<li>Use <code>ENTRYPOINT</code> for default runtime behavior</li>
+<li>Maybe call <code>ldconfig</code> at the end of your <code>Dockerfile</code></li>
 </ul>
 </section>
 </section>

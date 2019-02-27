@@ -1,7 +1,7 @@
 ---
 title: HPC Containers with Singularity
 author: Ben Evans
-date: December 4, 2018
+date: February 27, 2019
 ---
 
 # Outline for Today
@@ -31,7 +31,7 @@ your viewing pleasure"
 # 
 ### Three methods of control
 
-- Process isolation 
+- Process isolation
 - Resource Limits
 - Security
 
@@ -276,7 +276,7 @@ singularity run -B /tmp/${USER}:/tmp \
 # 
 Reverse `ssh` tunnel:
 ```bash
-ssh -NL 8787:cxxnxx:8787 grace.hpc.yale.edu
+ssh -NL 8787:cxxnxx:8787 netid@grace.hpc.yale.edu
 ```
 Then connect to http://localhost:8787
 
@@ -307,8 +307,8 @@ When you have to configure your own
 
 - Don’t install anything to root’s home, `/root`
 - Don’t put container valuables in `$TMP` or `$HOME`
-- Use `ENTRYPOINT` to for default runtime behavior
-- Update shared library cache by calling `ldconfig` at the end of your `Dockerfile`
+- Use `ENTRYPOINT` for default runtime behavior
+- Maybe call `ldconfig` at the end of your `Dockerfile`
 </section>
 
 # [Dockerfiles](https://docs.docker.com/engine/reference/builder)
