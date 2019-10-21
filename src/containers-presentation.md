@@ -1,7 +1,7 @@
 ---
 title: HPC Containers with Singularity
 author: Ben Evans
-date: February 27, 2019
+date: October 22, 2019
 ---
 
 # Outline for Today
