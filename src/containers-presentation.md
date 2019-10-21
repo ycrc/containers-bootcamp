@@ -60,7 +60,7 @@ When user is untrusted: run container as user
 # Should I Use Containers?
 | Pro                | Con                               |
 |--------------------|-----------------------------------|
-| Light-weight       | Often Linux-only                  |
+| Light-weight       | Linux-only*                       |
 | Fast Startup       | Another layer of abstraction      |
 | Shareable          | Additional development complexity |
 | Reproducible       | Licensed software can be tricky   |
