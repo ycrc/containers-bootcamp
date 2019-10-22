@@ -2,6 +2,8 @@
 
 A talk about how to use Singularity. Also about how to build Docker images to be used as either Singularity or Docker containers.
 
+Some examples are in the directory [dockerfile-examples](dockerfile-examples)
+
 ## Presenting
 
 The default keyboard shortcuts are:
@@ -17,13 +19,13 @@ The default keyboard shortcuts are:
 - <kbd>B</kbd>, <kbd>.</kbd>: Pause (Blackout)
 - <kbd>F</kbd>: Fullscreen
 - <kbd>ESC</kbd>, <kbd>O</kbd>: Slide overview / Escape from full-screen
-- <kbd>S</kbd>: Speaker notes view
+- <kbd>S</kbd>: Speaker notes view - broken right now
 - <kbd>?</kbd>: Show keyboard shortcuts
 - <kbd>alt</kbd> + click: Zoom in. Repeat to zoom back out.
 
 ## To Build
 
-Need `pandoc`, my version is `1.19.2.4`. To build slides (index.html) just run `make`.
+Need `pandoc`, my version is `2.7.3`. To build slides (index.html) just run `make`.
 
 ## Format
 
