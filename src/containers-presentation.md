@@ -552,7 +552,7 @@ rocker/rstudio  latest  879f3fd2bee9  39 hours ago  1.12GB
 ubuntu          bionic  93fd78260bd1  13 days ago   86.2MB
 ```
 
-- Delete images with `image rm`(https://docs.docker.com/engine/reference/commandline/image_rm/)
+- Delete images with [`image rm`](https://docs.docker.com/engine/reference/commandline/image_rm/)
 
 #
 ### [`run`](https://docs.docker.com/engine/reference/run/) locally
