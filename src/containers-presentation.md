@@ -1,5 +1,5 @@
 ---
-title: HPC Containers with Singularity
+title: Shareable Reproducible HPC Containers
 author: Ben Evans
 date: October 22, 2019
 ---
