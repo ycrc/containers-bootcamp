@@ -4,8 +4,7 @@ author: Ben Evans
 date: October 22, 2019
 ---
 
-#
-## Outline for Today
+# Outline for Today
 
 - Containers Background
 - Docker & Singularity
@@ -17,9 +16,10 @@ date: October 22, 2019
 ## Conventions
 
 ``` bash
-echo "this is one line of code split for \
-your viewing pleasure"
+echo "this is one line of code split \
+      for your viewing pleasure"
 ```
+
 [This is a link](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
 
 #
@@ -28,7 +28,7 @@ your viewing pleasure"
 <section>
 
 #
-### Definitions
+### Terms
 
 - _**Container Image**_: A self-contained, read-only file(s) used to run application(s)
 
@@ -38,7 +38,7 @@ your viewing pleasure"
 ### Three methods of control
 
 - Process isolation
-- Resource Limits
+- Resource limits
 - Security
 
 #
@@ -53,7 +53,7 @@ Linux [Namespaces](https://en.wikipedia.org/wiki/Linux_namespaces) for hiding va
 #
 ### Resource Limits
 
-Linux [cgroups](https://en.wikipedia.org/wiki/Cgroups) to limit RAM, CPU cores, etc etc.
+Linux [cgroups](https://en.wikipedia.org/wiki/Cgroups) to limit RAM, CPU cores, etc.
 
 #
 ### Security
@@ -69,13 +69,13 @@ When user is untrusted: run container as user
 
 | Pro                | Con                               |
 |--------------------|-----------------------------------|
-| Light-weight       | Linux-only*                       |
+| Light-weight       | Linux-only\*                      |
 | Fast Startup       | Another layer of abstraction      |
 | Shareable          | Additional development complexity |
 | Reproducible       | Licensed software can be tricky   |
 
 #
-## Example
+## Motivating Example
 
 GPU-enabled IPython [w/TensorFlow](https://www.tensorflow.org/install/docker) on a GPU node:
 
@@ -84,6 +84,22 @@ srun --pty -p gpu_devel -c 2 --gres gpu:1 --mem 16G \
   singularity exec --nv \
   docker://tensorflow/tensorflow:latest-gpu-jupyter \
   ipython
+```
+
+#
+## Better Example
+
+Saved container for [`viral-ngs`](https://viral-ngs.readthedocs.io/en/latest/) pipeline:
+
+``` bash
+# once
+singularity build viral-ngs-1.25.0.sif \
+  docker://broadinstitute/viral-ngs:1.25.0
+```
+
+``` bash
+# subsequently
+singularity exec viral-ngs-1.25.0.sif metagenomics.py -h
 ```
 
 #
@@ -98,8 +114,13 @@ srun --pty -p gpu_devel -c 2 --gres gpu:1 --mem 16G \
 - Most popular container application
 - Publicly [announced](https://www.youtube.com/watch?v=wW9CAH9nSLs) in 2013
 - Designed to run services
-    - Often used for web apps
-- Primary registry hub.docker.com
+  - Often used for web apps
+- Registries:
+  - [Docker Hub](https://hub.docker.com/)
+  - [Red Hat Quay.io](https://quay.io/)
+  - [Nvidia](https://www.nvidia.com/en-us/gpu-cloud/containers/)
+  - [Google](https://cloud.google.com/container-registry/)
+  - [Amazon](https://aws.amazon.com/ecr/)
 
 #
 ### Design
@@ -125,11 +146,11 @@ srun --pty -p gpu_devel -c 2 --gres gpu:1 --mem 16G \
 
 - Released in 2016, [paper in 2017](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0177459)
 - Designed to run compute jobs
-- Sylabs re-written, OSS/support model
-  - v2.6 and v3 different, not backwards-compatible
-- Registries: 
-  - singularity-hub.org
-  - cloud.sylabs.io/library
+- Sylabs re-write, OSS/support model
+  - v2 and v3 different, not backwards-compatible
+- Registries:
+  - [Singularity Hub](https://singularity-hub.org/)
+  - [Singularity Library](https://cloud.sylabs.io/library)
 
 #
 ### Design
@@ -142,8 +163,8 @@ srun --pty -p gpu_devel -c 2 --gres gpu:1 --mem 16G \
 ### Advantages
 
 - Admins are happy
-- Existing scripts, paths should work
-- No shuffling data around
+- Existing scripts, paths can work
+- Data are where you left them
 
 </section>
 
@@ -153,15 +174,14 @@ srun --pty -p gpu_devel -c 2 --gres gpu:1 --mem 16G \
 <section>
 
 #
-### [`build`](https://www.sylabs.io/guides/2.6/user-guide/appendix.html#build-command)
-
-Build a singularity image (on the clusters)
+### [`build`](https://sylabs.io/guides/3.4/user-guide/cli/singularity_build.html) a container image
 
 ``` bash
 singularity build my_container.sif \
    docker://brevans/my_container:latest
 ```
-- Can only build from docker/shub on cluster
+
+- Can only build from registries on cluster
 - Can also copy an image file from elsewhere
 
 #
@@ -176,70 +196,78 @@ singularity shell -s /bin/bash shub://user/image
 ```
 
 #
-### [`run`](https://www.sylabs.io/guides/2.6/user-guide/quick_start.html#running-a-container) (default behavior)
+### [`run`](https://sylabs.io/guides/3.4/user-guide/cli/singularity_run.html) (default behavior)
 
 ``` bash
 singularity run image.sif --arg=42
 ```
 
-- Default action specified by ENTRYPOINT
+- Default action specified by `CMD` or `%runscript`
 - Additional arguments are passed to default action
 - If image is +x and on path, can just be executed
 
 #
-### [`exec`](https://www.sylabs.io/guides/2.6/user-guide/appendix.html#exec-command)
-
-Run a command inside the container
+### [`exec`](https://sylabs.io/guides/3.4/user-guide/cli/singularity_exec.html) a command
 
 ``` bash
 singularity exec docker://tensorflow/tensorflow:latest-gpu \
-    python /home/be59/my_script.py
+    python /home/ben/my_script.py
 ```
 
 - Run first argument after container
 - Must exist/be on the `PATH` inside container
 
 #
-### [`shell`](https://www.sylabs.io/guides/2.6/user-guide/quick_start.html#shell)
+### [`shell`](https://sylabs.io/guides/3.4/user-guide/cli/singularity_shell.html) session
 
-Run an interactive shell inside the container
-```
+``` bash
 singularity shell -s /bin/bash sl-linux.sif
 ```
+
 - Use a different shell sh with `-s/--shell`
+
+#
+### [`inspect`](https://sylabs.io/guides/3.4/user-guide/cli/singularity_inspect.html) an image
+
+``` bash
+singularity inspect my_pipes.sif
+singularity inspect -r my_pipes.sif
+```
+
+- Use `-r` to show runscript
 
 </section>
 
 #
-## Runtime Config
+## Singularity Runtime Config
 
 <section>
 
 #
-### Docker Links
+### Container Links
 
 ``` text
-docker://[registry]/[namespace]/<repo_name>:[repo_tag]
+type://[registry]/[namespace]/<repo_name>:[repo_tag]
 ```
 
-- Registry: default [index.docker.io]
-- Namespace: username, org, or the default [library]
-- Repo: image name
-- Tag: name (e.g. latest) or hash (e.g. @sha256:1234...)
+- **Type**: docker, shub or library
+- **Registry**: default index.docker.io
+- **Namespace**: username, org, etc
+- **Repo**: image name
+- **Tag**: name (latest) or hash (@sha256:1a6hz...)
 
 #
 ### Environment Variables
 
-Set environment variables before running singularity:
+Set before running to add to container:
 
 ``` bash
 # prefixing new variables with with SINGULARITYENV_
 export SINGULARITYENV_BLASTDB=/data/db/blast
 ```
 
-To modify `PATH`:
-
 ``` bash
+# PATH
 export SINGULARITYENV_PREPEND_PATH=/opt/important/bin
 export SINGULARITYENV_APPEND_PATH=/opt/fallback/bin
 export SINGULARITYENV_PATH=/only/path
@@ -257,10 +285,10 @@ export SINGULARITY_CACHEDIR=~/scratch60/.singularity
 export SINGULARITY_CACHEDIR=/tmp/${USER}/.singularity
 ```
 
-( .singularity can get big fast )
+- Can get big fast
 
 #
-### Move Directories Around
+### Change Container Filesystem View
 
 Add host directory to the container with `-B/--bind`:
 
@@ -269,21 +297,17 @@ singularity run --bind /path/outside:/path/inside \
    my_container.sif
 ```
 
-A Container may expect files somewhere, e.g. `/data`
+- container may expect files somewhere, e.g. `/data`
 
 #
 ### Private DockerHub Repos
 
-To specify Docker Hub credentials:
+To specify DockerHub credentials:
 
 ``` bash
-set +o history
-export SINGULARITY_DOCKER_USERNAME=brevans
-export SINGULARITY_DOCKER_PASSWORD=password123
-set -o history
+singularity build --docker-login pytorch-19.09.sif \
+  docker://nvcr.io/nvidia/pytorch:19.09-py3
 ```
-
-!! Be wary of storing credentials in your shell history !!
 
 #
 ### Where did this come from?
@@ -294,7 +318,7 @@ Quick way to determine which files are from image:
 singularity run/exec/shell --containall ...
 ```
 
-Only container image files are available.
+- Only container image files are available
 
 #
 ### GPUs
@@ -308,9 +332,8 @@ singularity run/exec/shell --nv ...
 #
 ### MPI
 
-Having recent and same version in container and on host is usually sufficient
-
-Please reach out if you are trying something interesting!
+- Have recent and same version in container & host
+- `mpirun` inside container needs more setup
 
 </section>
 
@@ -319,13 +342,13 @@ Please reach out if you are trying something interesting!
 
 <section>
 
-I want to run the newest RStudio and tidyverse.
+I want to run RStudio and Tidyverse.
 
 see: [rocker-project.org](https://www.rocker-project.org/)
 
 #
 
-job file:
+Job file
 
 ``` bash
 #!/bin/bash
@@ -366,19 +389,25 @@ When you have to configure your own
 ![](img/workflow_diagram.svg)
 
 #
+### *id est*
+
+- Use docker to build everything
+- Use singularity to when you can't use docker
+
+#
 ### Reasoning
 
 - Docker/Docker Hub ecosystem large, stable
 - Docker re-builds can be faster
-- Docker Hub can auto-build github repos
-- More easily use docker on other platforms
+- Can auto-build git repos to docker\*
+- More easily use docker on most platforms
 
 #
 ### Best Practices
 
 - Don’t install anything to root’s home, `/root`
 - Don’t put container valuables in `$TMP` or `$HOME`
-- Use `ENTRYPOINT` for default runtime behavior
+- Use `CMD` for default runtime behavior
 - Maybe call `ldconfig` at the end of your `Dockerfile`
 
 </section>
@@ -387,6 +416,16 @@ When you have to configure your own
 ### [Dockerfiles](https://docs.docker.com/engine/reference/builder)
 
 <section>
+
+#
+### Container recipes
+
+- File always named `Dockerfile`
+- Text file with setup scripts
+- Split up into *instructions*
+- Each instruction is a layer
+
+#
 
 A half-fix for my RStudio issue
 
@@ -397,48 +436,39 @@ LABEL maintainer="b.evans@yale.edu" version=0.01
 ENV RSTUDIO_PORT=30301
 RUN echo "www-port=${RSTUDIO_PORT}" >> /etc/rstudio/rserver.conf
 ```
-#
-- Recipes for container images
-- File always named `Dockerfile`
 
 #
-### [FROM](https://docs.docker.com/engine/reference/builder/#from)
-Sets base image
+### [FROM](https://docs.docker.com/engine/reference/builder/#from) a base image
 
 ```dockerfile
 FROM ubuntu:bionic
 FROM ubuntu@sha256:6d0e0c26489e33f5a6f0020edface2727db9489744ecc9b4f50c7fa671f23c49
 ```
+
 - Required, usually first
-- Hashes are more reproducible.
+- Hashes are more reproducible
 
 #
-### [LABEL](https://docs.docker.com/engine/reference/builder/#label)
-
-Annotate your container image with metadata.
+### [LABEL](https://docs.docker.com/engine/reference/builder/#label) your image
 
 ```dockerfile
-LABEL maintainer="ben evans <b.evans@yale.edu>"
+LABEL maintainer="Ben Evans <b.evans@yale.edu>"
 LABEL help="help message"
 ```
 
-- Good to at least specify a maintainer email.
+- Good to at least specify a maintainer email
 
 #
-### [ENV](https://docs.docker.com/engine/reference/builder/#env)
-
-Set environment variables.
+### [ENV](https://docs.docker.com/engine/reference/builder/#env) variables
 
 ```dockerfile
 ENV PATH=/opt/my_app/bin:$PATH MY_DB=/opt/my_app/db ...
 ```
 
-- Available for subsequent layers, and at runtime.
+- Available for subsequent layers, and at runtime
 
 #
-### [RUN](https://docs.docker.com/engine/reference/builder/#run)
-
-Run commands to build your image.
+### [RUN](https://docs.docker.com/engine/reference/builder/#run) commands
 
 ```dockerfile
 RUN apt-get update && \
@@ -448,93 +478,97 @@ RUN apt-get update && \
                     vim
 ```
 
-- Each `RUN` instruction is a separate layer.
-- Suggested style: one package per line, alphabetical
+- Always chain update and install together
+- One package per line, alphabetical
 
 #
-### [COPY](https://docs.docker.com/engine/reference/builder/#copy)
-
-Copy files from your computer to the image.
+### [COPY](https://docs.docker.com/engine/reference/builder/#copy) files
 
 ```dockerfile
 COPY <host_src>... <container_dest>
 ```
 
-- I usually try to download them instead
+- Try to download them instead
 
 #
-### [ENTRYPOINT](https://docs.docker.com/engine/reference/builder/#entrypoint)
+### [CMD](https://docs.docker.com/engine/reference/builder/#cmd)
 
 Specify a default action.
 
 ```dockerfile
-ENTRYPOINT ["/opt/conda/bin/ipython", "notebook"]
+CMD ["/opt/conda/bin/ipython", "notebook"]
 ```
 
-- Used for docker run and singularity run.
-
+- Used for docker run and singularity run
+- Also ENTRYPOINT, [they interact](https://docs.docker.com/engine/reference/builder/#understand-how-cmd-and-entrypoint-interact)
 </section>
 
 #
-## Docker Development
+## Docker Image Development
 
 <section>
 
 #
 ### Tips
 
-- Put most troublesome RUNs at the end
+- Put most troublesome/changing parts at the end
 - Use git to version your Dockerfile
-- **Only** use ENTRYPOINT (not CMD) if you plan to use Singularity
-- Use [docker inspect](https://docs.docker.com/engine/reference/commandline/inspect/) to get container image info
+- Keep build directory clean
+- Look into [multi-stage builds](https://docs.docker.com/develop/develop-images/multistage-build/)
+
+#
+### [inspect](https://docs.docker.com/engine/reference/commandline/inspect/) an image
 
 ``` bash
 docker inspect ubuntu:bionic
-docker inspect --format='{{index .RepoDigests 0}}' ubuntu:bionic
+docker inspect --format='{{index .RepoDigests 0}}' \
+  ubuntu:bionic
+
+docker inspect -f '{{.Config.Entrypoint}} {{.Config.Cmd}}' \
+  nvcr.io/nvidia/pytorch:19.09-py3
 ```
 
 #
-### [`build`](https://docs.docker.com/engine/reference/commandline/build/)
-
-Build locally
+### [`build`](https://docs.docker.com/engine/reference/commandline/build/) locally
 
 ``` bash
 cd /path/to/Dockerfile_dir/
 docker build -t custom_ubuntu:testing .
 ```
 
-- use -t to tag your builds
+- Notice the period at the end for current directory
+- Use -t to tag your builds
 
 #
-### [Image List](https://docs.docker.com/engine/reference/commandline/image_ls/)
-
-List container images on your computer
+### [`image ls`](https://docs.docker.com/engine/reference/commandline/image_ls/)
 
 ``` bash
 docker image ls
+```
+
+``` text
 REPOSITORY      TAG     IMAGE ID      CREATED       SIZE
 rocker/rstudio  latest  879f3fd2bee9  39 hours ago  1.12GB
 ubuntu          bionic  93fd78260bd1  13 days ago   86.2MB
 ```
 
-#
-### [`run`](https://docs.docker.com/engine/reference/run/)
+- Delete images with `image rm`(https://docs.docker.com/engine/reference/commandline/image_rm/)
 
-Run Docker locally
+#
+### [`run`](https://docs.docker.com/engine/reference/run/) locally
 
 ``` bash
-docker run --rm custom_ubuntu:testing
-docker run --rm -ti --entrypoint /bin/bash custom_ubuntu:testing 
+docker run --rm custom_ubuntu:dev
+docker run --rm -ti custom_ubuntu:testing /bin/bash
 ```
 
 - Use `--rm` to clean up container after it exits
-- Docker containers run like `--containall` by default
-  - Use `--volume` to bind directories to container
+- Use `--volume` to bind directories to container
+- Use `-e` to set environment variables
+  - `-e USERID=$UID` can avoid permission woes
 
 #
-### [`push`](https://docs.docker.com/docker-cloud/builds/push-images/)
-
-Send your container to Docker Hub for use elsewhere
+### [`push`](https://docs.docker.com/docker-cloud/builds/push-images/) to cloud
 
 ``` bash
 export DOCKER_USERNAME="username"
@@ -544,12 +578,15 @@ docker push ${DOCKER_USERNAME}/my_image
 ```
 
 #
-### [`prune`](https://docs.docker.com/engine/reference/commandline/system_prune/)
+### [`prune`](https://docs.docker.com/engine/reference/commandline/system_prune/) uneeded things
 
 Clean up every now and again.
 
 ``` bash
 docker system prune
+```
+
+``` text
 WARNING! This will remove:
         - all stopped containers
         - all networks not used by at least one container
@@ -571,18 +608,18 @@ Install Docker on [MacOS](https://docs.docker.com/docker-for-mac/), [Windows](ht
 
 [Ubuntu](https://hub.docker.com/_/ubuntu/) and [CentOS](https://hub.docker.com/_/centos/) [Docker Hub](https://hub.docker.com/) pages
 
-[`Dockerfile` reference](https://docs.docker.com/engine/reference/builder)
+[`Dockerfile` reference](https://docs.docker.com/engine/reference/builder) & [best practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices)
 
 [`docker` CLI reference](https://docs.docker.com/engine/reference/commandline/docker/)
 
 #
 
-[Singularity Documentation](https://www.sylabs.io/docs/)
+[Singularity docs](https://www.sylabs.io/docs/)
 
-Install Singularity [v3](https://www.sylabs.io/guides/3.0/user-guide/quick_start.html#quick-installation-steps) and [v2](https://www.sylabs.io/guides/2.6/user-guide/installation.html)
+[Install Singularity](https://sylabs.io/guides/3.4/user-guide/installation.html)
 
-Container [recipe reference](https://www.sylabs.io/guides/2.6/user-guide/container_recipes.html#container-recipes)
+[Container definition reference](https://sylabs.io/guides/3.4/user-guide/definition_files.html)
 
-YCRC [abridged Singularity docs](https://research.computing.yale.edu/support/hpc/user-guide/singularity-yale)
+[YCRC abridged Singularity docs](https://research.computing.yale.edu/support/hpc/user-guide/singularity-yale)
 
 </section>
